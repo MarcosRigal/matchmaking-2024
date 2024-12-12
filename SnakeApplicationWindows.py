@@ -1,8 +1,10 @@
 import time
-import curses
 import argparse
 import rti.connextdds as dds
 from collections import deque
+import os
+import keyboard
+
 from utils import ShapeTypeExtended
 
 
@@ -12,19 +14,11 @@ class SnakeApplication:
         self.dds_width = 230
         self.dds_height = 265
 
-        # Initialize curses for input handling
-        if not is_bot:
-            self.screen = curses.initscr()
-            curses.noecho()
-            curses.cbreak()
-            self.screen.keypad(True)
-            self.screen.nodelay(True)
+        self.screen = None
 
         # Initialize DDS components
         # TODO: Implement DDS initialization
 
-        
-        # Initialize snake attributes
         self.snake_id = snake_id
         self.is_bot = is_bot
 
@@ -75,12 +69,7 @@ class SnakeApplication:
             time.sleep(0.1)
 
     def __del__(self):
-        if not self.is_bot:
-            # Cleanup curses
-            curses.nocbreak()
-            self.screen.keypad(False)
-            curses.echo()
-            curses.endwin()
+        pass
 
 
 def parse_args():
@@ -102,10 +91,6 @@ def main():
         app.run()
     except KeyboardInterrupt:
         print(f"\nSnake {args.snake_id} has stopped.")
-    finally:
-        if not args.is_bot:
-            curses.endwin()  # Ensure proper cleanup
-
 
 if __name__ == "__main__":
     main()
